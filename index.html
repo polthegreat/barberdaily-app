@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Barber Daily TikTok Checker</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6B4226">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BD Checker">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    background: #F4E9DA;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+  }
+  #app-frame {
+    border: none; width: 100%; height: 100vh; height: 100dvh; display: block;
+  }
+  #loading {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #F4E9DA; z-index: 10; text-align: center; padding: 24px;
+  }
+  #loading img {
+    width: 72px; height: 72px; border-radius: 16px; margin-bottom: 16px;
+    box-shadow: 0 8px 24px rgba(60,36,18,0.2);
+  }
+  #loading .title { color: #3B2417; font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  #loading .subtitle { color: #6B4226; font-size: 13px; }
+  .spinner {
+    margin-top: 18px; width: 28px; height: 28px; border-radius: 50%;
+    border: 3px solid #E8D5BC; border-top-color: #6B4226;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #fallback {
+    margin-top: 22px; display: none;
+  }
+  #fallback a {
+    display: inline-block; background: #6B4226; color: #FFF8F0; text-decoration: none;
+    padding: 10px 26px; border-radius: 999px; font-weight: 500; font-size: 14px;
+  }
+  #fallback p { color: #6B4226; font-size: 12px; margin: 10px 0 0 0; }
+
+  #install-btn {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    background: #6B4226; color: #FFF8F0; border: none; border-radius: 999px;
+    padding: 12px 24px; font-size: 14px; font-weight: 600; box-shadow: 0 8px 20px rgba(60,36,18,0.35);
+    display: none; z-index: 20; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <img src="icon-192.png" alt="Barber Daily logo">
+  <div class="title">Barber Daily TikTok Checker</div>
+  <div class="subtitle">Loading your tracker...</div>
+  <div class="spinner"></div>
+  <div id="fallback">
+    <a href="https://barberdailychecker.streamlit.app/" target="_top">Open the app</a>
+    <p>Taking a while? Tap above to open it directly.</p>
+  </div>
+</div>
+
+<iframe id="app-frame" src="https://barberdailychecker.streamlit.app/" title="Barber Daily TikTok Checker" allow="clipboard-write"></iframe>
+
+<button id="install-btn">Install App</button>
+
+<script>
+  // Hide the loading screen once the app frame has loaded.
+  var frame = document.getElementById("app-frame");
+  var loading = document.getElementById("loading");
+  var fallback = document.getElementById("fallback");
+
+  frame.addEventListener("load", function () {
+    loading.style.display = "none";
+  });
+
+  // If it's taking too long (or the page refuses to be embedded), show a
+  // button to open the app directly instead of leaving a spinner forever.
+  setTimeout(function () {
+    fallback.style.display = "block";
+  }, 6000);
+
+  // Register the service worker so the browser treats this as installable.
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+
+  // Android / desktop Chrome: show a custom "Install App" button.
+  var deferredPrompt = null;
+  var installBtn = document.getElementById("install-btn");
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "block";
+  });
+
+  installBtn.addEventListener("click", function () {
+    installBtn.style.display = "none";
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt = null;
+    }
+  });
+
+  window.addEventListener("appinstalled", function () {
+    installBtn.style.display = "none";
+  });
+</script>
+
+</body>
+</html>
