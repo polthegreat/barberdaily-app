@@ -1,0 +1,25 @@
+{
+  "name": "Barber Daily TikTok Checker",
+  "short_name": "BD Checker",
+  "description": "Check TikTok influencer and affiliate video stats for Barber Daily campaigns.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F4E9DA",
+  "theme_color": "#6B4226",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
